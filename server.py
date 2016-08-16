@@ -9,27 +9,25 @@ mysql = MySQLConnector(app,'carsdb')
 
 @app.route('/')
 def index():
-	return render_template('index.html')
+	query = "SELECT * FROM cars"
+	return render_template('index.html', cars=mysql.query_db(query))
 
-@app.route('/view/<id>')
-def view(id):
+@app.route('/view/<id>', methods = ['GET'])
+def index():
+	query = "SELECT * FROM cars WHERE id = :id LIMIT 1"
+	return render_template('index.html', car=mysql.query_db(query)[0])
 
-	return render_template('view.html')
+@app.route('/edit/<id>', methods = ['GET'])
+def index():
+	return render_template('edit.html', id=id)
 
-@app.route('/add')
-def add():
+@app.route('/delete/<id>', methods = ['GET'])
+def index():
+	return render_template('delete.html', id=id)
 
+@app.route('/add', methods = ['GET'])
+def index():
 	return render_template('add.html')
-
-@app.route('/edit/<id>')
-def edit(id):
-
-	return render_template('edit.html')
-
-@app.route('/delete/<id>')
-def delete(id):
-
-	return render_template('delete.html')
 
 @app.route('/add_car', methods=['POST'])
 def add_car():
