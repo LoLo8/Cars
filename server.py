@@ -13,16 +13,19 @@ def index():
 	return render_template('index.html', cars=mysql.query_db(query))
 
 @app.route('/view/<id>', methods = ['GET'])
-def index():
+def index(id):
+	data = {'id': id}	
 	query = "SELECT * FROM cars WHERE id = :id LIMIT 1"
-	return render_template('index.html', car=mysql.query_db(query)[0])
+	return render_template('index.html', car=mysql.query_db(query, data)[0])
 
 @app.route('/edit/<id>', methods = ['GET'])
-def index():
-	return render_template('edit.html', id=id)
+def index(id):
+	data = {'id': id}
+	query = "SELECT * FROM cars WHERE id = :id LIMIT 1"
+	return render_template('edit.html', car=mysql.query_db(query, data)[0])
 
 @app.route('/delete/<id>', methods = ['GET'])
-def index():
+def index(id):
 	return render_template('delete.html', id=id)
 
 @app.route('/add', methods = ['GET'])
