@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Cars Project</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <!-- <link rel="stylesheet" type="text/css" href="index.css"> -->
+    <link rel="stylesheet" type="text/css"
+    href={{ url_for('static', filename="index.css") }}>
+</head>
+<body>
+	<h1>List of My Favorite Cars</h1>
+	<table class="table table-condensed">
+	    <thead>
+	        <tr>
+	            <th>make</th>
+	            <th>model</th>
+	            <th>specs</th>
+	        </tr>
+	    </thead>
+	    <tbody>
+        	{% for car in cars %}
+		        <tr>
+		            <td>{{car['make']}}</td>
+		            <td>{{car['model']}}</td>
+		            <td>
+						<a href="/view/id"><button type="button" class="btn btn-primary btn-sm">Info</button></a>
+						<a href="/edit/id"><button type="button" class="btn btn-primary btn-sm">Edit</button></a>
+						<a href="/delete/id"><button type="button" class="btn btn-default btn-sm">Delete</button></a>
+		            </td>
+				</tr>		            
+            {% endfor %}
+	    </tbody>
+	</table>
+	<div id = "add">
+<!-- 	<input type="submit" value="New Car"> -->
+	 <a href="/add"><button type="button" class="btn btn-primary btn-lg">New Car</button></a>
+	</div>
+	<div class="flash">
+		{% with messages = get_flashed_messages() %}
+			<p class="{{messages[0]}}">{{messages[1]}}</p>
+		{% endwith %}
+	</div>
+</body>
+</html>
