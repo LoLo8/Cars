@@ -32,7 +32,8 @@ def index():
 @app.route('/add_car', methods=['POST'])
 def add_car():
 	data =	{	'make': request.form['make'],
-				'model' request.form['model']
+				'model': request.form['model']
+				'info': request['info']
 			}
 
 	# Check all form fields are filled:
@@ -53,8 +54,8 @@ def add_car():
 		return redirect('/add')
 
 	# Valid data, add new car:
-	query =	"""INSERT INTO cars (make, model, created_at, updated_at)
-				VALUES (:make, :model, NOW(), NOW())
+	query =	"""INSERT INTO cars (make, model, info,  created_at, updated_at)
+				VALUES (:make, :model, :info, NOW(), NOW())
 			"""	
 	flash('green')
 	flash('{} {} added.'.format(data['make'], data['model']))			
@@ -67,6 +68,7 @@ def edit_car(id):
 	data =	{	'id': id,
 				'make': request.form['make'],
 				'model' request.form['model']
+				'info': request.form['info']
 			}
 
 	# Check all form fields are filled:
@@ -78,24 +80,29 @@ def edit_car(id):
 
 	# Check make/model not already in database:
 	query =	"""SELECT make, model FROM cars
+				WHERE id = :id
+				LIMIT 1
+			"""				
+	old_car = mysql.query_db(query, data)
+
+	query =	"""SELECT make, model FROM cars
 				WHERE make = :make
 				AND model = :model
 				LIMIT 1
 			"""	
-	car = mysql.query_db(query, data)
-	# If it is, don't update:
-	if len(car) == 1 :
-		if car[0]['make'] == data['model'] and car[0]['model'] == data['model']
-			flash('red')
-			flash('Make and model hasn\'t changed. No edits made.')
-			return redirect('/edit')
-		else:
+	new_car = mysql.query_db(query, data)
+
+	# If the new car's make and model matches an old entry, it should be the same car,
+	# otherwise avoid duplicating:
+	if len(new_car) == 1:
+		# If make and model hasn't been updated:
+		if not (car[0]['make'] == data['make'] and car[0]['model'] == data['model']):
 			flash('red')
 			flash('{} {} already exists.'.format(data['make'], data['model']))
-			return redirect('/edit')				
+			return redirect('/add')
 
 	# Valid data, edit car:
-	query =	"""UPDATE cars SET make = :make, model = :model, updated_at = NOW()
+	query =	"""UPDATE cars SET make = :make, model = :model, info = :info, updated_at = NOW()
 				WHERE id = :id
 			"""	
 	mysql.query_db(query, data)			
