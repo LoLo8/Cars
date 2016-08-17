@@ -1,0 +1,28 @@
+#container{
+	width: 1000px;
+}
+
+#header{
+	width: 0px auto;
+}
+
+#body{
+	width: 0px auto;
+}
+
+.green, .red {
+	width: 250px;
+	margin-top: 50px;
+	padding: 5px;
+	color: white;
+	text-align: center;
+}
+
+.green {
+	background-color: green;
+
+}
+
+.red {
+	background-color: red;
+}
