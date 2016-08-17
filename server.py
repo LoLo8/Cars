@@ -16,8 +16,6 @@ def index():
 def view(id):
 	data = {'id': id}	
 	query = "SELECT * FROM cars WHERE id = :id LIMIT 1"
-	print('id: {}'.format(id), file=sys.stderr)
-
 	return render_template('view.html', car=mysql.query_db(query, data)[0])
 
 @app.route('/edit/<id>', methods = ['GET'])
@@ -65,7 +63,6 @@ def add_car():
 	flash('green')
 	flash('{} {} added.'.format(data['make'], data['model']))			
 	mysql.query_db(query, data)
-
 	return redirect('/')
 
 @app.route('/edit_car/<id>', methods=['POST'])
@@ -89,14 +86,11 @@ def edit_car(id):
 				LIMIT 1
 			"""	
 	new_car = mysql.query_db(query, data)
-	# print('new_id: {} data_id: {}'.format(new_car[0]['id'], data['id']), file=sys.stderr)
 
 	# If the new car's make and model matches an old entry, it should be the same car,
 	# otherwise avoid duplicating:
 	if len(new_car) == 1:
 		# If make and model hasn't been updated:
-		# print(type(new_car[0]['id']), file=sys.stderr)
-		# print(new_car[0]['id'] == data['id'], file=sys.stderr)
 		if int(new_car[0]['id']) == int(data['id']):
 			pass
 		else:
